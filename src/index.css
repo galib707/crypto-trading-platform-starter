@@ -16,5 +16,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: url();
+    background: url(https://media.istockphoto.com/vectors/digital-background-of-science-or-blockchain-vector-id869666492.svg) no-repeat;
+    background-size: cover;
 }
