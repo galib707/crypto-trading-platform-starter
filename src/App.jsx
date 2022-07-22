@@ -23,7 +23,7 @@ function reducer(state, action) {
       }
 
     case ACTIONS.COINS:
-      state.coins = { ...action.payLoad };
+      state.coins = action.payLoad.slice();
       return { ...state };
 
     default:
@@ -32,7 +32,7 @@ function reducer(state, action) {
 }
 
 function App() {
-  let [state, dispatch] = useReducer(reducer, { theme: 'dark', coins: {}, holdings: [], transactions: [] });
+  let [state, dispatch] = useReducer(reducer, { theme: 'dark', coins: [], holdings: [], transactions: [] });
 
   function displayCoins(data) {
     dispatch({ type: ACTIONS.COINS, payLoad: data });
@@ -41,16 +41,18 @@ function App() {
   let intervalID = useRef();
   useEffect(function () {
     intervalID.current = setInterval(function () {
-      async function getData() {
-        // /https://api.coingecko.com/api/v3/simple/price?ids=bitcoin%2CEthereum%2Cdogecoin&vs_currencies=usd&include_24hr_change=true
-        let response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=bitcoin%2CEthereum%2Cdogecoin&vs_currencies=usd&include_24hr_change=true`);
-        let data = await response.json();
-        displayCoins(data);
-      }
-      getData()
+      getData();
       console.log('rendered');
     }, 5000)
 
+    getData();
+
+    async function getData() {
+      //https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin%2C%20ethereum%2C%20dogecoin&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=%601h%2C24h%2C7d%60
+      let response = await fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin%2C%20ethereum%2C%20dogecoin&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=%601h%2C24h%2C7d%60`);
+      let data = await response.json();
+      displayCoins(data);
+    }
     return (() => {
       clearInterval(intervalID.current);
     })
@@ -68,7 +70,7 @@ function App() {
           </section>
 
           <section className="mid">
-            {Object.keys(state.coins).map((elem, ind) => { return <Coins name={elem} price={state.coins[elem].usd} change={state.coins[elem]["usd_24h_change"].toFixed(2)} /> })}
+            {state.coins.map((elem, ind) => { return <Coins name={elem.name} price={elem["current_price"]} change={elem["price_change_percentage_24h_in_currency"].toFixed(2)} image={elem.image} /> })}
           </section>
 
           <section className="bottom">

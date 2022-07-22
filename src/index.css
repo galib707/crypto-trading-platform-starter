@@ -1,127 +1,151 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-  font-family: "Poppins", sans-serif;
+    font-family: "Poppins", sans-serif;
 }
 
 /* Contaniner */
 .container {
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  flex-direction: column;
-  background: url(./bg.svg) no-repeat;
-  background-size: cover;
-  align-items: center;
-  border: 2px solid green;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    background: url(./bg.svg) no-repeat;
+    background-size: cover;
+    justify-content: flex-start;
+    align-items: center;
+    border: 2px solid green;
 }
 
 /* App */
 .App {
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  flex-direction: column;
-  /* justify-content: center; */
-  align-items: center;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0px;
 }
 
 /* top  */
 .top {
-  width: 50vw;
-  height: 20vh;
-  border: 2px solid green;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+    width: 50vw;
+    height: 20vh;
+    /* border: 2px solid green; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .top h1 {
-  font-size: 2rem;
+    font-size: 2rem;
 }
 
 /* mid */
 .mid {
-  width: 70vw;
-  height: 30vh;
-  border: 2px solid green;
-  display: flex;
-  align-items: center;
+    width: 70vw;
+    height: 30vh;
+    /* border: 2px solid green; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
 }
 
 /* mid__card__design for coin */
 .coin-container {
-  width: 400px;
-  height: 150px;
-  border: 2px solid red;
-  display: flex;
+    width: 250px;
+    height: 95px;
+    /* border: 2px solid red; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 4px 4px 9px 2px rgba(0, 0, 0, 0.24);
+    background-color: ghostwhite;
+    border-radius: 7px;
 }
 
 .coin_icon {
-  width: 40%;
-  height: 100%;
-  border: 2px solid green;
+    width: 40%;
+    height: 100%;
+    /* border: 2px solid green; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.coin_icon img {
+    width: 80%;
+    height: 80%;
 }
 
 .coin_status {
-  width: 60%;
-  height: 100%;
-  border: 2px solid green;
+    width: 60%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    /* border: 2px solid green; */
 }
 
 /* bottom */
 
 .bottom {
-  width: 70vw;
-  height: 40vh;
-  border: 2px solid green;
-  display: flex;
+    width: 70vw;
+    height: 40vh;
+    border: 2px solid green;
+    display: flex;
 }
 
 /* transaction container and holding card*/
 .transactions-cont,
 .holdings-cont {
-  width: 50%;
-  height: 40vh;
-  border: 2px solid green;
-  display: flex;
-  flex-direction: column;
+    width: 50%;
+    height: 40vh;
+    border: 2px solid green;
+    display: flex;
+    flex-direction: column;
 }
 
 /*  holdings card */
 .holidings_card {
-  width: 90%;
-  height: 20%;
-  border: 2px solid black;
-  gap: 1em;
+    width: 90%;
+    height: 20%;
+    border: 2px solid black;
+    gap: 1em;
 }
 
 /* trasaction description */
 .transaction_card {
-  width: 90%;
-  height: 30%;
-  border: 2px solid black;
-  gap: 1em;
-  display: flex;
+    width: 90%;
+    height: 30%;
+    border: 2px solid black;
+    gap: 1em;
+    display: flex;
 }
+
 .left_bar {
-  width: 10px;
-  height: 100%;
-  background-color: red;
-  border-top-left-radius: 8px;
-  border-bottom-left-radius: 8px;
+    width: 10px;
+    height: 100%;
+    background-color: red;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
 }
+
 .transaction_description {
-  width: 90%;
-  height: 100%;
-  border: 2px solid green;
-  display: flex;
-  flex-direction: column;
+    width: 90%;
+    height: 100%;
+    border: 2px solid green;
+    display: flex;
+    flex-direction: column;
 }
