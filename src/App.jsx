@@ -1,4 +1,4 @@
-import { useState, useReducer } from "react";
+import { useRef, useReducer, useEffect } from "react";
 import Coins from "./components/Coins";
 import Holdings from "./components/Holdings";
 import Transactions from "./components/Transactions";
@@ -24,6 +24,9 @@ function reducer(state, action) {
         return { ...state, theme: 'light' }
       }
 
+    case ACTIONS.COINS:
+      state.coins = { ...action.payLoad };
+      return { ...state };
 
     default:
       return state;
@@ -31,18 +34,28 @@ function reducer(state, action) {
 }
 
 function App() {
-  let [state, dispatch] = useReducer(reducer, { theme: 'dark', coins: [], holdings: [], transactions: [] });
+  let [state, dispatch] = useReducer(reducer, { theme: 'dark', coins: {}, holdings: [], transactions: [] });
 
-  useEffect(() => {
-    async function getData() {
-      // /https://api.coingecko.com/api/v3/simple/price?ids=bitcoin%2CEthereum%2Cdogecoin&vs_currencies=usd&include_24hr_change=true
-      let response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=bitcoin%2CEthereum%2Cdogecoin&vs_currencies=usd&include_24hr_change=true`);
-      let data = await response.json();
-      setMoviesList(data.results);
-      setLoading(false);
-    }
-    getData()
-    console.log('rendered');
+  function displayCoins(data) {
+    dispatch({ type: ACTIONS.COINS, payLoad: data });
+  }
+
+  let intervalID = useRef();
+  useEffect(function () {
+    intervalID.current = setInterval(function () {
+      async function getData() {
+        // /https://api.coingecko.com/api/v3/simple/price?ids=bitcoin%2CEthereum%2Cdogecoin&vs_currencies=usd&include_24hr_change=true
+        let response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=bitcoin%2CEthereum%2Cdogecoin&vs_currencies=usd&include_24hr_change=true`);
+        let data = await response.json();
+        displayCoins(data);
+      }
+      getData()
+      console.log('rendered');
+    }, 5000)
+
+    return (() => {
+      clearInterval(intervalID.current);
+    })
   }, [])
 
   return (
@@ -57,7 +70,7 @@ function App() {
           </section>
 
           <section className="mid">
-            <Coins />
+            {Object.keys(state.coins).map((elem, ind) => { return <Coins name={elem} price={state.coins[elem].usd} change={state.coins[elem]["usd_24h_change"].toFixed(2)} /> })}
           </section>
 
           <section className="bottom">
