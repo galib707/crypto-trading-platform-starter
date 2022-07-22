@@ -10,7 +10,8 @@ const ACTIONS = {
   COINS: "add-to-coinsList",
   HOLDS: "add-to-holdingsList",
   TRANS: "add-to-transactionsList",
-  deleteCOMPLETED: "delete-completed-tasks",
+  NAME: "boxName",
+  PRICE: "boxPrice",
 };
 
 function reducer(state, action) {
@@ -26,37 +27,58 @@ function reducer(state, action) {
       state.coins = action.payLoad.slice();
       return { ...state };
 
+    case ACTIONS.NAME:
+      state.boxName = action.payLoad;
+      return { ...state };
+
+    case ACTIONS.PRICE:
+      state.boxPrice = action.payLoad;
+      return { ...state };
+
     default:
       return state;
   }
 }
 
 function App() {
-  let [state, dispatch] = useReducer(reducer, { theme: 'dark', coins: [], holdings: [], transactions: [] });
+  let [state, dispatch] = useReducer(reducer, {
+    theme: "dark",
+    coins: [],
+    holdings: [],
+    transactions: [],
+    boxName: null,
+    boxPrice: null,
+  });
 
   function displayCoins(data) {
     dispatch({ type: ACTIONS.COINS, payLoad: data });
   }
 
+  const handleClick = (name, price) => {
+    dispatch({ type: ACTIONS.NAME, payLoad: name });
+    dispatch({ type: ACTIONS.PRICE, payLoad: price });
+  };
   let intervalID = useRef();
   useEffect(function () {
     intervalID.current = setInterval(function () {
       getData();
-      console.log('rendered');
-    }, 5000)
+      console.log("rendered");
+    }, 5000);
 
     getData();
 
     async function getData() {
       //https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin%2C%20ethereum%2C%20dogecoin&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=%601h%2C24h%2C7d%60
-      let response = await fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin%2C%20ethereum%2C%20dogecoin&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=%601h%2C24h%2C7d%60`);
+      let response = await fetch(
+        `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin%2C%20ethereum%2C%20dogecoin&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=%601h%2C24h%2C7d%60`
+      );
       let data = await response.json();
       displayCoins(data);
     }
-    return (() => {
+    return () => {
       clearInterval(intervalID.current);
-    })
-  }, [])
+    };
+  }, []);
 
   return (
     <CryptoContext.Provider value={{}}>
@@ -70,17 +92,55 @@ function App() {
           </section>
 
           <section className="mid">
-            {state.coins.map((elem, ind) => { return <Coins name={elem.name} price={elem["current_price"]} change={elem["price_change_percentage_24h_in_currency"].toFixed(2)} image={elem.image} /> })}
+            {state.coins.map((elem, ind) => {
+              return (
+                <Coins
+                  name={elem.name}
+                  price={elem["current_price"]}
+                  change={elem[
+                    "price_change_percentage_24h_in_currency"
+                  ].toFixed(2)}
+                  image={elem.image}
+                  handleClick={handleClick}
+                />
+              );
+            })}
           </section>
 
           <section className="bottom">
             <div className="holdings-cont">
               <h1>Current Holdings</h1>
+              <button className="add_to_holdings">Go buy some 🚀</button>
               <Holdings />
             </div>
             <div className="transactions-cont">
               <h1>Transactions</h1>
               <Transactions />
+            </div>
+          </section>
+
+          <section className="buy_box">
+            <div className="buy_box_header">
+              Buy {state.boxName}
+              <button className="close">X</button>
+            </div>
+            <div className="buy_box_body">
+              <p>Current Price: $ {state.boxPrice}</p>
+              <div className="input_max_amount">
+                <input type="number" name="" id="quantity" />
+                <p>Max:{}</p>
+              </div>
+              <p>You will be charged $ {}</p>
+              <div className="radio_button">
+                <input type="radio" id="buy" name="action" />{" "}
+                <label for="buy">Buy</label>
+                <br />
+                <input type="radio" id="sell" name="action" />{" "}
+                <label for="sell">Sell</label>
+              </div>
+              <div className="buy">
+                <button className="buy_button">Buy</button>
+              </div>
             </div>
           </section>
         </main>
