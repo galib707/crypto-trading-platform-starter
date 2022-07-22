@@ -12,6 +12,9 @@ const ACTIONS = {
   TRANS: "add-to-transactionsList",
   NAME: "boxName",
   PRICE: "boxPrice",
+  WALLET: "wallet",
+  VALUE: "value",
+  QUANTITY: "quantity",
 };
 
 function reducer(state, action) {
@@ -35,6 +38,17 @@ function reducer(state, action) {
       state.boxPrice = action.payLoad;
       return { ...state };
 
+    case ACTIONS.WALLET:
+      state.wallet = action.payLoad;
+      return { ...state };
+
+    case ACTIONS.VALUE:
+      return { ...state };
+
+    case ACTIONS.QUANTITY:
+      state.quantity = action.payLoad;
+      return { ...state };
+
     default:
       return state;
   }
@@ -48,6 +62,9 @@ function App() {
     transactions: [],
     boxName: null,
     boxPrice: null,
+    wallet: 100,
+    value: 0,
+    quantity: 0,
   });
 
   function displayCoins(data) {
@@ -87,8 +104,8 @@ function App() {
           <section className="top">
             <h1 className="title">Earn some virtual money 💰</h1>
             <p className="sub-title">To buy virtual food🍕</p>
-            <h2 className="wallet">🏛 Wallet : ${59.35}</h2>
-            <h3 className="value">Porfolio Value: ${40.56}</h3>
+            <h2 className="wallet">🏛 Wallet : ${state.wallet}</h2>
+            <h3 className="value">Porfolio Value: ${state.price}</h3>
           </section>
 
           <section className="mid">
@@ -127,10 +144,20 @@ function App() {
             <div className="buy_box_body">
               <p>Current Price: $ {state.boxPrice}</p>
               <div className="input_max_amount">
-                <input type="number" name="" id="quantity" />
-                <p>Max:{}</p>
+                <input
+                  type="number"
+                  name=""
+                  id="quantity"
+                  onChange={(e) => {
+                    dispatch({
+                      type: ACTIONS.QUANTITY,
+                      payLoad: e.target.value,
+                    });
+                  }}
+                />
+                <p>Max:{(state.wallet / state.boxPrice).toFixed(5)}</p>
               </div>
-              <p>You will be charged $ {}</p>
+              <p>You will be charged $ {state.quantity * state.boxPrice}</p>
               <div className="radio_button">
                 <input type="radio" id="buy" name="action" />{" "}
                 <label for="buy">Buy</label>
