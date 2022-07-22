@@ -1,21 +1,127 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
+/* Contaniner */
 .container {
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: url(./bg.svg) no-repeat;
-    background-size: cover;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  background: url(./bg.svg) no-repeat;
+  background-size: cover;
+  align-items: center;
+  border: 2px solid green;
+}
+
+/* App */
+.App {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+}
+
+/* top  */
+.top {
+  width: 50vw;
+  height: 20vh;
+  border: 2px solid green;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.top h1 {
+  font-size: 2rem;
+}
+
+/* mid */
+.mid {
+  width: 70vw;
+  height: 30vh;
+  border: 2px solid green;
+  display: flex;
+  align-items: center;
+}
+
+/* mid__card__design for coin */
+.coin-container {
+  width: 400px;
+  height: 150px;
+  border: 2px solid red;
+  display: flex;
+}
+
+.coin_icon {
+  width: 40%;
+  height: 100%;
+  border: 2px solid green;
+}
+
+.coin_status {
+  width: 60%;
+  height: 100%;
+  border: 2px solid green;
+}
+
+/* bottom */
+
+.bottom {
+  width: 70vw;
+  height: 40vh;
+  border: 2px solid green;
+  display: flex;
+}
+
+/* transaction container and holding card*/
+.transactions-cont,
+.holdings-cont {
+  width: 50%;
+  height: 40vh;
+  border: 2px solid green;
+  display: flex;
+  flex-direction: column;
+}
+
+/*  holdings card */
+.holidings_card {
+  width: 90%;
+  height: 20%;
+  border: 2px solid black;
+  gap: 1em;
+}
+
+/* trasaction description */
+.transaction_card {
+  width: 90%;
+  height: 30%;
+  border: 2px solid black;
+  gap: 1em;
+  display: flex;
+}
+.left_bar {
+  width: 10px;
+  height: 100%;
+  background-color: red;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+.transaction_description {
+  width: 90%;
+  height: 100%;
+  border: 2px solid green;
+  display: flex;
+  flex-direction: column;
 }
