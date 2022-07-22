@@ -1,5 +1,6 @@
-import logo from "./logo.svg";
 import "./App.css";
+
+import CryptoContext from './contexts/CryptoContext'
 
 function App() {
   return <div className="App"></div>;
