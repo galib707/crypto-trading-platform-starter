@@ -1,4 +1,3 @@
-import "./App.css";
 import Coins from "./components/Coins";
 import Holdings from "./components/Holdings";
 import Transactions from "./components/Transactions";
