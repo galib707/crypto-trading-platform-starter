@@ -8,7 +8,7 @@ export default function Coins() {
       </div>
       <div className="coin_status">
         <h1>{}</h1>
-        <h3></h3>
+        <h3>{}</h3>
         <p>Last 24hr:{}</p>
       </div>
     </div>
