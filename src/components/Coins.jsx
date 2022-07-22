@@ -2,6 +2,6 @@ import React from 'react'
 
 export default function Coins() {
     return (
-        <div>Coins</div>
+        <div className='coins-list'>Coins</div>
     )
 }
