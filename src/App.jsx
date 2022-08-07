@@ -35,11 +35,11 @@ function reducer(state, action) {
       return { ...state };
 
     case ACTIONS.PRICE:
-      state.boxPrice = action.payLoad;
+      state.boxPrice = Number(action.payLoad);
       return { ...state };
 
     case ACTIONS.WALLET:
-      state.wallet -= action.payLoad;
+      state.wallet = (state.wallet - action.payLoad).toFixed(3);
       return { ...state };
 
     case ACTIONS.VALUE:
@@ -50,11 +50,25 @@ function reducer(state, action) {
       return { ...state };
 
     case ACTIONS.HOLDS:
-      state.holdings.push(action.payLoad);
+      let found = false;
+      for (let i = 0; i < state.holdings.length; i++) {
+        if (state.holdings[i].Cname === action.payLoad.Cname) {
+          found = true;
+          state.holdings[i].currQ = state.holdings[i].currQ + action.payLoad.currQ;
+          state.holdings[i].tp = Number(state.holdings[i].tp) + Number(action.payLoad.tp);
+          state.holdings[i].cp = Number(state.holdings[i].cp) + Number(action.payLoad.cp);
+          state.holdings[i].pl = (((state.holdings[i].cp - state.holdings[i].tp) / state.holdings[i].tp) * 100).toFixed(3);
+          break;
+        }
+      }
+      if (!found) {
+        state.holdings.push(action.payLoad);
+      }
       return { ...state };
 
     case ACTIONS.TRANS:
       state.transactions.push(action.payLoad);
+      console.log(state.transactions);
       return { ...state };
 
     default:
@@ -81,17 +95,19 @@ function App() {
   function handleAct(action, currCoin, currRate, currQuantity) {
     if (action === 'Buy') {
       let objData = {
-        'name': currCoin,
+        'Cname': currCoin,
         'currRate': currRate,
         'currQ': currQuantity,
-        'tp': (currQuantity * currRate).toFixed(3),
-        'cp': (currQuantity * currRate).toFixed(3),
+        'tp': Number((currQuantity * currRate).toFixed(3)),
+        'cp': Number((currQuantity * currRate).toFixed(3)),
         'timeStamp': new Date().toDateString(),
       }
       objData.pl = (((objData.cp - objData.tp) / objData.tp).toFixed(4)) * 100;
-      dispatch({ type: ACTIONS.HOLDS, payLoad: objData });
+      //console.log(objData);
       dispatch({ type: ACTIONS.TRANS, payLoad: objData });
+      dispatch({ type: ACTIONS.HOLDS, payLoad: objData });
       dispatch({ type: ACTIONS.WALLET, payLoad: objData.tp });
+      //state.transactions.push(objData);
     }
   }
 
@@ -203,9 +219,9 @@ function App() {
                     });
                   }}
                 />
-                <p>Max:{(state.wallet / state.boxPrice).toFixed(5)}</p>
+                <p>Max:{(state.wallet / state.boxPrice).toFixed(3)}</p>
               </div>
-              <p>You will be charged $ {state.quantity * state.boxPrice}</p>
+              <p>You will be charged $ {(state.quantity * state.boxPrice).toFixed(3)}</p>
               <div className="radio_button">
                 <input type="radio" id="buy" name="action" value={'Buy'} onChange={(e) => {
                   setAct(() => e.target.value);
@@ -219,7 +235,7 @@ function App() {
               </div>
               <div className="buy">
                 <button className="buy_button" onClick={() => {
-                  handleAct(act, state.boxName, state.boxPrice, state.quantity);
+                  handleAct(act, state.boxName, Number(state.boxPrice), Number(state.quantity));
                 }}>{act}</button>
               </div>
             </div>

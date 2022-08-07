@@ -5,7 +5,7 @@ export default function Coins(props) {
         <div
             className="coin-container"
             onClick={() => {
-                props.handleClick(props.name, props.price);
+                props.handleClick(props.name, Number(props.price));
             }}
         >
             <div className="coin_icon">
