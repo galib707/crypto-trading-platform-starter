@@ -39,7 +39,7 @@ function reducer(state, action) {
       return { ...state };
 
     case ACTIONS.WALLET:
-      state.wallet = action.payLoad;
+      state.wallet -= action.payLoad;
       return { ...state };
 
     case ACTIONS.VALUE:
@@ -47,6 +47,14 @@ function reducer(state, action) {
 
     case ACTIONS.QUANTITY:
       state.quantity = action.payLoad;
+      return { ...state };
+
+    case ACTIONS.HOLDS:
+      state.holdings.push(action.payLoad);
+      return { ...state };
+
+    case ACTIONS.TRANS:
+      state.transactions.push(action.payLoad);
       return { ...state };
 
     default:
@@ -69,6 +77,23 @@ function App() {
 
   let [popup, setPopup] = useState('');
   let [act, setAct] = useState('Buy');
+
+  function handleAct(action, currCoin, currRate, currQuantity) {
+    if (action === 'Buy') {
+      let objData = {
+        'name': currCoin,
+        'currRate': currRate,
+        'currQ': currQuantity,
+        'tp': (currQuantity * currRate).toFixed(3),
+        'cp': (currQuantity * currRate).toFixed(3),
+        'timeStamp': new Date().toDateString(),
+      }
+      objData.pl = (((objData.cp - objData.tp) / objData.tp).toFixed(4)) * 100;
+      dispatch({ type: ACTIONS.HOLDS, payLoad: objData });
+      dispatch({ type: ACTIONS.TRANS, payLoad: objData });
+      dispatch({ type: ACTIONS.WALLET, payLoad: objData.tp });
+    }
+  }
 
   function displayCoins(data) {
     dispatch({ type: ACTIONS.COINS, payLoad: data });
@@ -96,6 +121,8 @@ function App() {
       let data = await response.json();
       displayCoins(data);
     }
+
+    //console.log(state)
     return () => {
       clearInterval(intervalID.current);
     };
@@ -134,11 +161,23 @@ function App() {
             <div className="holdings-cont">
               <h1>Current Holdings</h1>
               {/* <button className="add_to_holdings">Go buy some 🚀</button> */}
-              <Holdings />
+              {
+                // useEffect(function () {
+                state.holdings.map((elem, indx) => {
+                  return <Holdings key={indx} elem={elem} />
+                })
+                // }, [state.holdings])
+              }
             </div>
             <div className="transactions-cont">
               <h1>Transactions</h1>
-              <Transactions />
+              {
+                // useEffect(function () {
+                state.transactions.map((elem, indx) => {
+                  return <Transactions key={indx} elem={elem} />
+                })
+                // }, [state.transactions])
+              }
             </div>
           </section>
 
@@ -179,7 +218,9 @@ function App() {
                 <label htmlFor="sell">Sell</label>
               </div>
               <div className="buy">
-                <button className="buy_button">{act}</button>
+                <button className="buy_button" onClick={() => {
+                  handleAct(act, state.boxName, state.boxPrice, state.quantity);
+                }}>{act}</button>
               </div>
             </div>
           </section>
