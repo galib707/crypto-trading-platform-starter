@@ -6,11 +6,11 @@ export default function Transactions() {
             <div className="left_bar"></div>
             <div className="transaction_description">
                 <p>
-                    { }-{ } @{ }
+                    { } - { } @{ }
                 </p>
-                <p>Paid:$ { }</p>
+                <p>Paid: ${ }</p>
                 <p>
-                    Bought on: { },{ }
+                    Bought on: { }
                 </p>
             </div>
         </div>

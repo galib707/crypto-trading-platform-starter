@@ -68,6 +68,7 @@ function App() {
   });
 
   let [popup, setPopup] = useState('');
+  let [act, setAct] = useState('Buy');
 
   function displayCoins(data) {
     dispatch({ type: ACTIONS.COINS, payLoad: data });
@@ -120,7 +121,7 @@ function App() {
                   price={elem["current_price"]}
                   change={elem[
                     "price_change_percentage_24h_in_currency"
-                  ].toFixed(2)}
+                  ].toFixed(3)}
                   image={elem.image}
                   handleClick={handleClick}
                   key={elem.id}
@@ -143,7 +144,7 @@ function App() {
 
           <section className="buy_box">
             <div className="buy_box_header">
-              <p>Buy : {state.boxName}</p>
+              <p>{act} : {state.boxName}</p>
               <button className="close" onClick={() => {
                 setPopup(() => '');
               }}
@@ -167,14 +168,18 @@ function App() {
               </div>
               <p>You will be charged $ {state.quantity * state.boxPrice}</p>
               <div className="radio_button">
-                <input type="radio" id="buy" name="action" />{" "}
+                <input type="radio" id="buy" name="action" value={'Buy'} onChange={(e) => {
+                  setAct(() => e.target.value);
+                }} />{" "}
                 <label htmlFor="buy">Buy</label>
                 <br />
-                <input type="radio" id="sell" name="action" />{" "}
+                <input type="radio" id="sell" name="action" value={'Sell'} onChange={(e) => {
+                  setAct(() => e.target.value);
+                }} />{" "}
                 <label htmlFor="sell">Sell</label>
               </div>
               <div className="buy">
-                <button className="buy_button">Buy</button>
+                <button className="buy_button">{act}</button>
               </div>
             </div>
           </section>

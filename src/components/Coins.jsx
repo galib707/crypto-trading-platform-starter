@@ -14,7 +14,7 @@ export default function Coins(props) {
             <div className="coin_status">
                 <h3>$ {props.price}</h3>
                 <h1>{props.name}</h1>
-                <p>Last 24hr:{props.change}</p>
+                <p>Last 24hr: <b style={{color: props.change<0?'red':'green'}}>{props.change}%</b></p>
             </div>
         </div>
     );

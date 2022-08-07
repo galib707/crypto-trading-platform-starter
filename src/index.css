@@ -12,7 +12,7 @@ body {
 
 /* Contaniner */
 .container {
-    height: 100vh;
+    min-height: 100vh;
     width: 100vw;
     display: flex;
     flex-direction: column;
@@ -20,12 +20,12 @@ body {
     background-size: cover;
     justify-content: flex-start;
     align-items: center;
-    border: 2px solid green;
+    /* border: 2px solid green; */
 }
 
 /* App */
 .App {
-    height: 100vh;
+    height: 100%;
     width: 100vw;
     display: flex;
     flex-direction: column;
@@ -58,19 +58,19 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 20px;
+    gap: 30px;
 }
 
 /* mid__card__design for coin */
 .coin-container {
-    width: 250px;
-    height: 95px;
+    width: 260px;
+    height: 115px;
     /* border: 2px solid red; */
     display: flex;
     justify-content: center;
     align-items: center;
     box-shadow: 4px 4px 9px 2px rgba(0, 0, 0, 0.24);
-    background-color: ghostwhite;
+    background-color: white;
     border-radius: 7px;
     cursor: pointer;
 }
@@ -95,21 +95,27 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-    padding: 15px;
+    align-items: flex-start;
+    padding: 15px 0;
     /* border: 2px solid green; */
+}
+
+.coin_status h1 {
+    font-size: 25px;
+    color: rgba(0, 82, 97, 0.815);
 }
 
 /* bottom */
 
 .bottom {
-    width: 70%;
+    margin-top: 20px;
+    width: 75%;
     height: 50vh;
     /* border: 2px solid green; */
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 20px;
+    gap: 30px;
 }
 
 /* transaction container and holding card*/
@@ -121,7 +127,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
 }
 
 /*  holdings card */
@@ -130,7 +136,11 @@ body {
     height: 30%;
     border: 2px solid black;
     border-radius: 8px;
-    gap: 1em;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-evenly;
+    padding-left: 20px;
 }
 
 /* trasaction description */
@@ -158,6 +168,7 @@ body {
     /* border: 2px solid green; */
     display: flex;
     flex-direction: column;
+    justify-content: space-evenly;
 }
 
 /* buy-box */
@@ -231,7 +242,7 @@ button {
 }
 
 .buy_button {
-    padding: 5px 15px;
+    padding: 5px 25px;
     border-radius: 5px;
     background-color: black;
     color: white;

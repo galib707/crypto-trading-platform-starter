@@ -11,7 +11,7 @@ export default function Holdings() {
                 Total Paid: { }, Current Value: { }
             </p>
 
-            <p>P/L: { }</p>
+            <p>P/L: { }🚀</p>
         </div>
     );
 }
