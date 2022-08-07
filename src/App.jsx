@@ -1,4 +1,4 @@
-import { useRef, useReducer, useEffect } from "react";
+import { useRef, useReducer, useEffect, useState } from "react";
 import Coins from "./components/Coins";
 import Holdings from "./components/Holdings";
 import Transactions from "./components/Transactions";
@@ -62,10 +62,12 @@ function App() {
     transactions: [],
     boxName: null,
     boxPrice: null,
-    wallet: 100,
+    wallet: 1000,
     value: 0,
     quantity: 0,
   });
+
+  let [popup, setPopup] = useState('');
 
   function displayCoins(data) {
     dispatch({ type: ACTIONS.COINS, payLoad: data });
@@ -74,6 +76,7 @@ function App() {
   const handleClick = (name, price) => {
     dispatch({ type: ACTIONS.NAME, payLoad: name });
     dispatch({ type: ACTIONS.PRICE, payLoad: price });
+    setPopup(() => 'popup');
   };
   let intervalID = useRef();
   useEffect(function () {
@@ -99,7 +102,7 @@ function App() {
 
   return (
     <CryptoContext.Provider value={{}}>
-      <div className="container">
+      <div className={`container ${popup}`}>
         <main className="App">
           <section className="top">
             <h1 className="title">Earn some virtual money 💰</h1>
@@ -112,6 +115,7 @@ function App() {
             {state.coins.map((elem, ind) => {
               return (
                 <Coins
+                  setPopup={setPopup}
                   name={elem.name}
                   price={elem["current_price"]}
                   change={elem[
@@ -119,6 +123,7 @@ function App() {
                   ].toFixed(2)}
                   image={elem.image}
                   handleClick={handleClick}
+                  key={elem.id}
                 />
               );
             })}
@@ -127,7 +132,7 @@ function App() {
           <section className="bottom">
             <div className="holdings-cont">
               <h1>Current Holdings</h1>
-              <button className="add_to_holdings">Go buy some 🚀</button>
+              {/* <button className="add_to_holdings">Go buy some 🚀</button> */}
               <Holdings />
             </div>
             <div className="transactions-cont">
@@ -138,11 +143,14 @@ function App() {
 
           <section className="buy_box">
             <div className="buy_box_header">
-              Buy {state.boxName}
-              <button className="close">X</button>
+              <p>Buy : {state.boxName}</p>
+              <button className="close" onClick={() => {
+                setPopup(() => '');
+              }}
+              >X</button>
             </div>
             <div className="buy_box_body">
-              <p>Current Price: $ {state.boxPrice}</p>
+              <p>Current Price: <b>${state.boxPrice}</b></p>
               <div className="input_max_amount">
                 <input
                   type="number"
@@ -160,16 +168,17 @@ function App() {
               <p>You will be charged $ {state.quantity * state.boxPrice}</p>
               <div className="radio_button">
                 <input type="radio" id="buy" name="action" />{" "}
-                <label for="buy">Buy</label>
+                <label htmlFor="buy">Buy</label>
                 <br />
                 <input type="radio" id="sell" name="action" />{" "}
-                <label for="sell">Sell</label>
+                <label htmlFor="sell">Sell</label>
               </div>
               <div className="buy">
                 <button className="buy_button">Buy</button>
               </div>
             </div>
           </section>
+          <div className="overlay"></div>
         </main>
       </div>
     </CryptoContext.Provider>
