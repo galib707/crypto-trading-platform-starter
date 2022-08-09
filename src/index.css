@@ -160,9 +160,16 @@ body {
 .left_bar {
     width: 10px;
     height: 100%;
-    background-color: red;
     border-top-left-radius: 8px;
     border-bottom-left-radius: 8px;
+}
+
+.transaction_card .green {
+    background-color: green;
+}
+
+.transaction_card .red {
+    background-color: red;
 }
 
 .transaction_description {
@@ -191,7 +198,7 @@ body {
 
 .buy_box {
     width: 300px;
-    height: 270px;
+    min-height: 270px;
     position: absolute;
     z-index: 2;
     display: none;
@@ -204,6 +211,7 @@ body {
     outline: 2px solid black;
     background-color: white;
     box-shadow: 4px 4px 13px 4px rgba(0, 0, 0, 0.678);
+    padding-bottom: 10px;
 }
 
 .popup .buy_box {
@@ -240,12 +248,17 @@ button {
     flex: 1;
     justify-content: center;
     align-items: flex-start;
-    padding: 0 20px;
-    gap: 5px;
+    padding: 10px 20px;
+    gap: 15px;
+}
+
+.buy_box_body input {
+    padding: 5px 0;
+    padding-left: 15px;
 }
 
 .buy_button {
-    padding: 5px 25px;
+    padding: 5px 35px;
     border-radius: 5px;
     background-color: black;
     color: white;

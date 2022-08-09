@@ -8,18 +8,17 @@ import CryptoContext from "./contexts/CryptoContext";
 const ACTIONS = {
   THEME: "update-theme",
   COINS: "add-to-coinsList",
-  HOLDS: "add-to-holdingsList",
-  TRANS: "add-to-transactionsList",
   NAME: "boxName",
   PRICE: "boxPrice",
   WALLET: "wallet",
   VALUE: "value",
   QUANTITY: "quantity",
-  BUY: "buy-coin"
+  BUY: "buy-coin",
+  SELL: "sell-coin",
 };
 
 function reducer(state, action) {
-  console.log(action);
+  //console.log(action);
   switch (action.type) {
     case ACTIONS.THEME:
       if (state.theme === "light") {
@@ -50,7 +49,6 @@ function reducer(state, action) {
       return { ...state };
 
     case ACTIONS.WALLET:
-      state.wallet = (state.wallet - action.payLoad).toFixed(3);
       return { ...state };
 
     case ACTIONS.VALUE:
@@ -60,32 +58,20 @@ function reducer(state, action) {
       state.quantity = action.payLoad;
       return { ...state };
 
-    case ACTIONS.HOLDS:
-    // let found = false;
-    // let copy = state.holdings.slice();
-    // for (let i = 0; i < copy.length; i++) {
-    //   if (copy[i].Cname === action.payLoad.Cname) {
-    //     found = true;
-    //     copy[i].currQ = copy[i].currQ + action.payLoad.currQ;
-    //     copy[i].tp = (Number(copy[i].tp) + Number(action.payLoad.tp)).toFixed(3);
-    //     copy[i].cp = (Number(copy[i].cp) + Number(action.payLoad.cp)).toFixed(3);
-    //     copy[i].pl = (((copy[i].cp - copy[i].tp) / copy[i].tp) * 100).toFixed(3);
-    //     break;
-    //   }
-    // }
-    // if (!found) {
-    //   copy.push(action.payLoad);
-    // }
-    // return { ...state, holdings: copy };
-
-    case ACTIONS.TRANS:
-    // let copy1 = state.transactions.slice();
-    // console.log(action.payLoad);
-    // copy1.push(action.payLoad);
-    // // console.log(state.transactions);
-    // return { ...state, transactions: copy1 };
 
     case ACTIONS.BUY:
+      /*
+      let objData = {
+        'Cname': currCoin,
+        'currRate': currRate,
+        'currQ': currQuantity,
+        'tp': Number((currQuantity * currRate).toFixed(3)),
+        'cp': Number((currQuantity * currRate).toFixed(3)),
+        'timeStamp': new Date().toString(),
+        'trans-type': action,
+      }
+      objData.pl = (((objData.cp - objData.tp) / objData.tp).toFixed(4)) * 100;
+      */
       let found = false;
       let copy = state.holdings.slice();
       for (let i = 0; i < copy.length; i++) {
@@ -108,6 +94,38 @@ function reducer(state, action) {
       // console.log(state.transactions);
       return { ...state, holdings: copy, transactions: copy1, wallet: (state.wallet - action.payLoad.tp).toFixed(3) };
 
+
+
+    case ACTIONS.SELL:
+      /*
+      let objData = {
+        'Cname': currCoin,
+        'currRate': currRate,
+        'currQ': currQuantity,
+        'got': Number((currQuantity * currRate).toFixed(3)),
+        'timeStamp': new Date().toString(),
+        'trans-type': action,
+      }
+      */
+      let copyS = state.holdings.slice();
+      for (let i = 0; i < copyS.length; i++) {
+        if (copyS[i].Cname === action.payLoad.Cname) {
+          copyS[i].currQ = copyS[i].currQ - action.payLoad.currQ;
+          copyS[i].tp = (Number(copyS[i].tp) - Number(action.payLoad.got)).toFixed(3);
+          copyS[i].cp = (Number(copyS[i].cp) - Number(action.payLoad.got)).toFixed(3);
+          copyS[i].pl = (((copyS[i].cp - copyS[i].tp) / copyS[i].tp) * 100).toFixed(3);
+          break;
+        }
+      }
+
+      let copyS1 = state.transactions.slice();
+      //console.log(action.payLoad);
+      copyS1.push({ ...action.payLoad });
+      // console.log(state.transactions);
+      return { ...state, holdings: copyS, transactions: copyS1, wallet: (state.wallet + action.payLoad.got) };
+
+
+
     default:
       return state;
   }
@@ -128,6 +146,10 @@ function App() {
 
   let [popup, setPopup] = useState('');
   let [act, setAct] = useState('Buy');
+  let [stockHold, setStockHold] = useState(0);
+
+  let [coinName, setCoinName] = useState(null);
+  let [coinPrice, setCoinPrice] = useState(0);
 
   function handleAct(action, currCoin, currRate, currQuantity) {
     if (action === 'Buy') {
@@ -138,14 +160,22 @@ function App() {
         'tp': Number((currQuantity * currRate).toFixed(3)),
         'cp': Number((currQuantity * currRate).toFixed(3)),
         'timeStamp': new Date().toString(),
+        'trans-type': action,
       }
       objData.pl = (((objData.cp - objData.tp) / objData.tp).toFixed(4)) * 100;
-      //console.log(objData);
-      // dispatch({ type: ACTIONS.TRANS, payLoad: objData });
-      // dispatch({ type: ACTIONS.HOLDS, payLoad: objData });
-      // dispatch({ type: ACTIONS.WALLET, payLoad: objData.tp });
       dispatch({ type: ACTIONS.BUY, payLoad: objData })
-      //state.transactions.push(objData);
+    }
+
+    else if (action === 'Sell') {
+      let objData = {
+        'Cname': currCoin,
+        'currRate': currRate,
+        'currQ': currQuantity,
+        'got': Number((currQuantity * currRate).toFixed(3)),
+        'timeStamp': new Date().toString(),
+        'trans-type': action,
+      }
+      dispatch({ type: ACTIONS.SELL, payLoad: objData })
     }
   }
 
@@ -156,6 +186,16 @@ function App() {
   const handleClick = (name, price) => {
     dispatch({ type: ACTIONS.NAME, payLoad: name });
     dispatch({ type: ACTIONS.PRICE, payLoad: price });
+
+    let copy = state.holdings.slice();
+    for (let i = 0; i < copy.length; i++) {
+      if (copy[i].Cname === name) {
+        setStockHold(() => copy[i].currQ);
+        break;
+      }
+    }
+    setCoinName(() => name);
+    setCoinPrice(() => price);
     setPopup(() => 'popup');
   };
   let intervalID = useRef();
@@ -163,7 +203,7 @@ function App() {
     intervalID.current = setInterval(function () {
       getData();
       console.log("rendered");
-    }, 50000);
+    }, 5000);
 
     getData();
 
@@ -250,6 +290,8 @@ function App() {
                   type="number"
                   name=""
                   id="quantity"
+                  min={0}
+                  max={`${(state.wallet / state.boxPrice).toFixed(3)}`}
                   onChange={(e) => {
                     dispatch({
                       type: ACTIONS.QUANTITY,
@@ -257,17 +299,19 @@ function App() {
                     });
                   }}
                 />
-                <p>Max:{(state.wallet / state.boxPrice).toFixed(3)}</p>
+                <p>Max {act}: {act === 'Buy' ? (state.wallet / state.boxPrice).toFixed(3) : stockHold}</p>
               </div>
-              <p>You will be charged $ {(state.quantity * state.boxPrice).toFixed(3)}</p>
+              <p>You will {act === 'Buy' ? 'be CHARGED' : 'RECEIVE'} $ {(state.quantity * state.boxPrice).toFixed(3)}</p>
               <div className="radio_button">
                 <input type="radio" id="buy" name="action" value={'Buy'} onChange={(e) => {
                   setAct(() => e.target.value);
+                  handleClick(coinName, coinPrice);
                 }} />{" "}
                 <label htmlFor="buy">Buy</label>
                 <br />
                 <input type="radio" id="sell" name="action" value={'Sell'} onChange={(e) => {
                   setAct(() => e.target.value);
+                  handleClick(coinName, coinPrice);
                 }} />{" "}
                 <label htmlFor="sell">Sell</label>
               </div>
