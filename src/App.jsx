@@ -15,9 +15,11 @@ const ACTIONS = {
   WALLET: "wallet",
   VALUE: "value",
   QUANTITY: "quantity",
+  BUY: "buy-coin"
 };
 
 function reducer(state, action) {
+  console.log(action);
   switch (action.type) {
     case ACTIONS.THEME:
       if (state.theme === "light") {
@@ -59,27 +61,52 @@ function reducer(state, action) {
       return { ...state };
 
     case ACTIONS.HOLDS:
+    // let found = false;
+    // let copy = state.holdings.slice();
+    // for (let i = 0; i < copy.length; i++) {
+    //   if (copy[i].Cname === action.payLoad.Cname) {
+    //     found = true;
+    //     copy[i].currQ = copy[i].currQ + action.payLoad.currQ;
+    //     copy[i].tp = (Number(copy[i].tp) + Number(action.payLoad.tp)).toFixed(3);
+    //     copy[i].cp = (Number(copy[i].cp) + Number(action.payLoad.cp)).toFixed(3);
+    //     copy[i].pl = (((copy[i].cp - copy[i].tp) / copy[i].tp) * 100).toFixed(3);
+    //     break;
+    //   }
+    // }
+    // if (!found) {
+    //   copy.push(action.payLoad);
+    // }
+    // return { ...state, holdings: copy };
+
+    case ACTIONS.TRANS:
+    // let copy1 = state.transactions.slice();
+    // console.log(action.payLoad);
+    // copy1.push(action.payLoad);
+    // // console.log(state.transactions);
+    // return { ...state, transactions: copy1 };
+
+    case ACTIONS.BUY:
       let found = false;
-      for (let i = 0; i < state.holdings.length; i++) {
-        if (state.holdings[i].Cname === action.payLoad.Cname) {
+      let copy = state.holdings.slice();
+      for (let i = 0; i < copy.length; i++) {
+        if (copy[i].Cname === action.payLoad.Cname) {
           found = true;
-          state.holdings[i].currQ = state.holdings[i].currQ + action.payLoad.currQ;
-          state.holdings[i].tp = (Number(state.holdings[i].tp) + Number(action.payLoad.tp)).toFixed(3);
-          state.holdings[i].cp = (Number(state.holdings[i].cp) + Number(action.payLoad.cp)).toFixed(3);
-          state.holdings[i].pl = (((state.holdings[i].cp - state.holdings[i].tp) / state.holdings[i].tp) * 100).toFixed(3);
+          copy[i].currQ = copy[i].currQ + action.payLoad.currQ;
+          copy[i].tp = (Number(copy[i].tp) + Number(action.payLoad.tp)).toFixed(3);
+          copy[i].cp = (Number(copy[i].cp) + Number(action.payLoad.cp)).toFixed(3);
+          copy[i].pl = (((copy[i].cp - copy[i].tp) / copy[i].tp) * 100).toFixed(3);
           break;
         }
       }
       if (!found) {
-        state.holdings.push(action.payLoad);
+        copy.push({ ...action.payLoad });
       }
-      return { ...state };
 
-    case ACTIONS.TRANS:
-      console.log(action.payLoad);
-      state.transactions.push(action.payLoad);
-     // console.log(state.transactions);
-      return { ...state };
+      let copy1 = state.transactions.slice();
+      //console.log(action.payLoad);
+      copy1.push({ ...action.payLoad });
+      // console.log(state.transactions);
+      return { ...state, holdings: copy, transactions: copy1, wallet: (state.wallet - action.payLoad.tp).toFixed(3) };
 
     default:
       return state;
@@ -110,13 +137,14 @@ function App() {
         'currQ': currQuantity,
         'tp': Number((currQuantity * currRate).toFixed(3)),
         'cp': Number((currQuantity * currRate).toFixed(3)),
-        'timeStamp': new Date().toDateString(),
+        'timeStamp': new Date().toString(),
       }
       objData.pl = (((objData.cp - objData.tp) / objData.tp).toFixed(4)) * 100;
       //console.log(objData);
-      dispatch({ type: ACTIONS.TRANS, payLoad: objData });
-      dispatch({ type: ACTIONS.HOLDS, payLoad: objData });
-      dispatch({ type: ACTIONS.WALLET, payLoad: objData.tp });
+      // dispatch({ type: ACTIONS.TRANS, payLoad: objData });
+      // dispatch({ type: ACTIONS.HOLDS, payLoad: objData });
+      // dispatch({ type: ACTIONS.WALLET, payLoad: objData.tp });
+      dispatch({ type: ACTIONS.BUY, payLoad: objData })
       //state.transactions.push(objData);
     }
   }
@@ -135,7 +163,7 @@ function App() {
     intervalID.current = setInterval(function () {
       getData();
       console.log("rendered");
-    }, 5000);
+    }, 50000);
 
     getData();
 
@@ -200,7 +228,7 @@ function App() {
               {
                 // useEffect(function () {
                 state.transactions.map((elem, indx) => {
-                  return <Transactions key={indx} elem={elem} />
+                  return <Transactions key={`${elem}-${indx}`} elem={elem} />
                 })
                 // }, [state.transactions])
               }
