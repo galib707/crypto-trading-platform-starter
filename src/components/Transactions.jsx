@@ -14,7 +14,7 @@ export default function Transactions(props) {
                     : <p>Received: ${props.elem.got}</p>
                 }
                 <p>
-                    Bought on: {props.elem.timeStamp}
+                    {props.elem['trans-type'] === 'Buy' ? 'Bought' : 'Sold'} on: {props.elem.timeStamp}
                 </p>
             </div>
         </div >

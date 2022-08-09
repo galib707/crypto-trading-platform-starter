@@ -29,16 +29,20 @@ function reducer(state, action) {
 
     case ACTIONS.COINS:
       state.coins = action.payLoad.slice();
+      let valueUpdate = 0;
       for (let i = 0; i < state.holdings.length; i++) {
         for (let j = 0; j < state.coins.length; j++) {
           if (state.holdings[i].Cname === state.coins[j].name) {
             state.holdings[i].cp = (Number(state.holdings[i].currQ) * Number(state.coins[j]["current_price"])).toFixed(3);
+            //console.log([i, state.holdings[i].cp])
+            valueUpdate += Number(state.holdings[i].cp);
             state.holdings[i].pl = (((state.holdings[i].cp - state.holdings[i].tp) / state.holdings[i].tp) * 100).toFixed(3);
             break;
           }
         }
       }
-      return { ...state };
+      //console.log(valueUpdate);
+      return { ...state, value: valueUpdate };
 
     case ACTIONS.NAME:
       state.boxName = action.payLoad;
@@ -92,7 +96,7 @@ function reducer(state, action) {
       //console.log(action.payLoad);
       copy1.push({ ...action.payLoad });
       // console.log(state.transactions);
-      return { ...state, holdings: copy, transactions: copy1, wallet: (state.wallet - action.payLoad.tp).toFixed(3) };
+      return { ...state, holdings: copy, transactions: copy1, wallet: (Number(state.wallet) - Number(action.payLoad.tp)).toFixed(3) };
 
 
 
@@ -122,7 +126,7 @@ function reducer(state, action) {
       //console.log(action.payLoad);
       copyS1.push({ ...action.payLoad });
       // console.log(state.transactions);
-      return { ...state, holdings: copyS, transactions: copyS1, wallet: (state.wallet + action.payLoad.got) };
+      return { ...state, holdings: copyS, transactions: copyS1, wallet: (Number(state.wallet) + Number(action.payLoad.got)).toFixed(3) };
 
 
 
@@ -230,7 +234,7 @@ function App() {
             <h1 className="title">Earn some virtual money 💰</h1>
             <p className="sub-title">To buy virtual food🍕</p>
             <h2 className="wallet">🏛 Wallet : ${state.wallet}</h2>
-            <h3 className="value">Porfolio Value: ${state.price}</h3>
+            <h3 className="value">Porfolio Value: ${state.value}</h3>
           </section>
 
           <section className="mid">
@@ -291,7 +295,7 @@ function App() {
                   name=""
                   id="quantity"
                   min={0}
-                  max={`${(state.wallet / state.boxPrice).toFixed(3)}`}
+                  max={`${act === 'Buy' ? (state.wallet / state.boxPrice).toFixed(3) : stockHold}`}
                   onChange={(e) => {
                     dispatch({
                       type: ACTIONS.QUANTITY,
