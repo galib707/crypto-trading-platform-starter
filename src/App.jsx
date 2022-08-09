@@ -28,6 +28,15 @@ function reducer(state, action) {
 
     case ACTIONS.COINS:
       state.coins = action.payLoad.slice();
+      for (let i = 0; i < state.holdings.length; i++) {
+        for (let j = 0; j < state.coins.length; j++) {
+          if (state.holdings[i].Cname === state.coins[j].name) {
+            state.holdings[i].cp = (Number(state.holdings[i].currQ) * Number(state.coins[j]["current_price"])).toFixed(3);
+            state.holdings[i].pl = (((state.holdings[i].cp - state.holdings[i].tp) / state.holdings[i].tp) * 100).toFixed(3);
+            break;
+          }
+        }
+      }
       return { ...state };
 
     case ACTIONS.NAME:
@@ -55,8 +64,8 @@ function reducer(state, action) {
         if (state.holdings[i].Cname === action.payLoad.Cname) {
           found = true;
           state.holdings[i].currQ = state.holdings[i].currQ + action.payLoad.currQ;
-          state.holdings[i].tp = Number(state.holdings[i].tp) + Number(action.payLoad.tp);
-          state.holdings[i].cp = Number(state.holdings[i].cp) + Number(action.payLoad.cp);
+          state.holdings[i].tp = (Number(state.holdings[i].tp) + Number(action.payLoad.tp)).toFixed(3);
+          state.holdings[i].cp = (Number(state.holdings[i].cp) + Number(action.payLoad.cp)).toFixed(3);
           state.holdings[i].pl = (((state.holdings[i].cp - state.holdings[i].tp) / state.holdings[i].tp) * 100).toFixed(3);
           break;
         }
@@ -67,8 +76,9 @@ function reducer(state, action) {
       return { ...state };
 
     case ACTIONS.TRANS:
+      console.log(action.payLoad);
       state.transactions.push(action.payLoad);
-      console.log(state.transactions);
+     // console.log(state.transactions);
       return { ...state };
 
     default:
@@ -84,7 +94,7 @@ function App() {
     transactions: [],
     boxName: null,
     boxPrice: null,
-    wallet: 1000,
+    wallet: 100000,
     value: 0,
     quantity: 0,
   });
